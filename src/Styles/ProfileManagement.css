@@ -1,0 +1,78 @@
+.header {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #000;
+    font-size: 36px;
+ }
+ 
+ .formBox {
+    display: inline-block;
+    font: 14px Arial;
+    background-color: #e4e4e4;
+    box-shadow: 5px 5px 10px rgb(138, 138, 138);
+    padding: 20px;
+    width: 600px;
+    border-radius: 10px;
+ }
+ 
+ .form label {
+    display: inline-block;
+    text-align: right;
+    width: 85px;
+    font-size: 16px;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+ }
+ 
+ .form input {
+    display: inline-block;
+    font-size: 16px;
+    width: 450px;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+ }
+ 
+ #city {
+    width: 309px;
+ }
+ 
+ label[for="state"] {
+    width: 60px;
+ }
+ 
+ .form select {
+    display: inline-block;
+    font-size: 16px;
+    width: 65px;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+ }
+ 
+ .form input:focus, .form select:focus {
+    background-color: #fafafa;
+ }
+ 
+ .form button {
+    width: 95%;
+    color: white;
+    background-color: #09f;
+    padding: 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+ }
+ 
+ .form button:hover {
+    background-color: #07d;
+ }
