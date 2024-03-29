@@ -1,15 +1,15 @@
-import * as React from 'react';
+import * as React from "react";
 import "../Styles/LoginForm.css"
 import { useState } from "react";
-import { userLogin } from '../api/Users.api';
-import Alert from "@mui/material/Alert";
 import {FaUser, FaLock} from "react-icons/fa";
+import Alert from "@mui/material/Alert";
+import { userRegistration } from "../api/Users.api";
 
-const LoginForm = () => {
+export default function RegisterForm() {
     //alert messages
     const [showAlert1, setShowAlert1] = React.useState(false);
     const [errorMessage1, setErrorMessage1] = React.useState("");
-    //hooks for logging in
+    //hooks for registering
     const [Username, setUsername] = useState("");
     const [Password, setPassword] = useState("");
     const handleSetUsername = (event) => {
@@ -19,10 +19,10 @@ const LoginForm = () => {
         setPassword(event.target.value);
     };
 
-    const onClickLogin = async event => {
-        event.preventDefault();
-        var truth1, truth2;
-        if (
+const onClickRegister = async event => {
+    event.preventDefault();
+    var truth1, truth2;
+    if (
         Username === "NULL" || Username === "null" || Username === ""
       ) {
         truth1 = null;
@@ -34,33 +34,26 @@ const LoginForm = () => {
       } else {
         truth2 = Password;
       }         
-        try {
-        const logininfo = {
+      try {
+        const newUser = {
           Username: truth1,
-          Password: truth2
+          Password: truth2,
         };
-        console.log(logininfo);
-          const response = await userLogin(logininfo);
-          setShowAlert1(false);
-          setErrorMessage1("");
-          if (response != null) {
-            sessionStorage.setItem("currentUser", JSON.stringify(response[0]));
-          }
-          else {
-            setErrorMessage1("No user with that login.");
-            setShowAlert1(true);
-          }
-        } catch (error) {
-            setErrorMessage1("No user with that login.");
-            setShowAlert1(true);
-        }
-      };
+        console.log(newUser);
+        await userRegistration(newUser);
+        setShowAlert1(false);
+        setErrorMessage1("");
+      } catch (error) {
+        setErrorMessage1("Input error, please fix!");
+        setShowAlert1(true);
+      }                        
+}       
 
   return (
     <div className='container1'>
         <div className= 'container2'>
                 <form action="">
-                    <h1>Login</h1>
+                    <h1>Register</h1>
 
                     <div className="input1">
                         <input type="text" onChange={handleSetUsername} placeholder= 'Username' required />
@@ -71,14 +64,11 @@ const LoginForm = () => {
                         <input type="password" onChange={handleSetPassword} placeholder='Password' required />
                         {<FaLock className='icon'/>}
                     </div>
-                    
 
-                    <div className='button'>
-                        <button type="login" onClick={onClickLogin} href="/profilemanagement">Login</button>
-                    </div>
-
-                    <div className="registerLink">
-                        <p>Don't have an account? <a href="/register">Register</a></p>
+                    <div className='button1'>
+                        <a href="/">
+                        <button type="login" onClick={onClickRegister}>Register</button>
+                        </a>
                     </div>
                     {showAlert1 && (
                         <Alert
@@ -94,5 +84,3 @@ const LoginForm = () => {
         </div>
   );
 };
-
-export default LoginForm;

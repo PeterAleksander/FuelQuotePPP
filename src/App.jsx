@@ -16,6 +16,7 @@ import FuelQuoteHistory from './Pages/FuelQuoteHistory';
 import LoginForm from './Pages/LoginForm';
 import ProfileManagement from './Pages/ProfileManagement';
 import FuelQuoteForm from './Pages/FuelQuoteForm';
+import RegisterForm from './Pages/SignUp';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
         </Container>
       </Navbar>
         <Routes>
+          <Route path='/register' element={<RegisterForm/>}></Route>
           <Route path='/' element={<LoginForm/>}></Route>
           <Route path='/fuelquotehistory' element={<FuelQuoteHistory/>}></Route>
           <Route path='/profilemanagement' element={<ProfileManagement/>}></Route>
