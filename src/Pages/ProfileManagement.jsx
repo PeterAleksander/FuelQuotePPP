@@ -1,11 +1,9 @@
 import * as React from "react";
 import { useState } from "react";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { DataGrid, gridClasses } from "@mui/x-data-grid";
-import TableContainer from '@mui/material/TableContainer';
 import { Form } from 'react-bootstrap';
+import Alert from "@mui/material/Alert";
+import { profileManagement } from "../api/Users.api";
 
 import "../Styles/ProfileManagement.css"
 
@@ -16,6 +14,9 @@ const states = [
   ];
   
   const ProfileManagement = () => {
+    const [showAlert1, setShowAlert1] = React.useState(false);
+    const [errorMessage1, setErrorMessage1] = React.useState("");
+
     const [formData, setFormData] = useState({
       fullName: '',
       address1: '',
@@ -33,10 +34,35 @@ const states = [
       }));
     };
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async e => {
       e.preventDefault();
-      // Here you can handle form submission, e.g., send data to server
-      console.log(formData);
+      if(formData["fullName"] === 'NULL' || formData["fullName"] === 'null' || formData["fullName"] === '' || formData["fullName"].length > 50 || formData["fullName"].length <= 0) {
+        formData["fullName"] = null;
+      }
+      if(formData["address1"] === 'NULL' || formData["address1"] === 'null' || formData["address1"] === '' || formData["address1"].length > 100 || formData["address1"].length <= 0) {
+        formData["address1"] = null;
+      }
+      if(formData["address2"] === 'NULL' || formData["address2"] === 'null' || formData["address2"] === '' || formData["address2"].length > 100) {
+        formData["address2"] = null;
+      }
+      if(formData["city"] === 'NULL' || formData["city"] === 'null' || formData["city"] === '' || formData["city"].length > 100 || formData["city"].length <= 0) {
+        formData["city"] = null;
+      }
+      if(formData["state"] === 'NULL' || formData["state"] === 'null' || formData["state"] === '' || formData["state"].length <= 0) {
+        formData["state"] = null;
+      }
+      if(formData["zipcode"] === 'NULL' || formData["zipcode"] === 'null' || formData["zipcode"] === '' || formData["zipcode"].length > 9 || formData["zipcode"].length < 5 || parseInt(formData["zipcode"]).isInteger) {
+        formData["zipcode"] = null;
+      }
+      try {
+        console.log(formData);
+        await profileManagement(formData);
+        setShowAlert1(false);
+        setErrorMessage1("");
+      } catch (error) {
+        setErrorMessage1("Input error, please fix!");
+        setShowAlert1(true);
+      } 
     };
   
     return (
@@ -120,12 +146,23 @@ const states = [
             onChange={handleChange}
             required
             minLength={5}
+            maxLength={9}
           />
         </Form.Group>
   
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" onClick={handleSubmit}>
           Save
         </Button>
+
+        {showAlert1 && (
+          <Alert
+            severity="error"
+            onClose={() => setShowAlert1(false)}
+            sx={{ marginTop: 2, marginBottom: -2 }}
+            >
+            {errorMessage1}
+          </Alert>
+        )}
       </Form>
       </div>
     );
