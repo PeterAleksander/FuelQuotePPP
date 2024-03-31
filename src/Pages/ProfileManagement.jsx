@@ -106,7 +106,9 @@ export default function ProfileManagement() {
       } else {
         truth4 = null;
       } 
-      if (formData.state !== "" || !(formData.state === "NULL" || formData.state === "null" || formData.state === "" || formData.state.length > 50 || formData.state.length <= 0)){
+      if (formData.state === "Other"){
+        truth5 = "NA";
+      } else if (formData.state !== "" || !(formData.state === "NULL" || formData.state === "null" || formData.state === "" || formData.state.length > 50 || formData.state.length <= 0)) {
         truth5 = formData.state;
       } else if (state !== "") {
         truth5 = state;
