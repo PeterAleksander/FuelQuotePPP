@@ -6,16 +6,17 @@ import Typography from "@mui/material/Typography";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import TableContainer from '@mui/material/TableContainer';
 import { Form } from 'react-bootstrap';
+import Alert from "@mui/material/Alert";
 
 import "../Styles/ProfileManagement.css"
 
 const states = [
-    { code: 'AL', name: 'AL' },
-    { code: 'AK', name: 'AK' },
+    { code: 'TX', name: 'TX' },
+    { code: 'Other', name: 'Other' },
     // Add other states as needed...
   ];
   
-  const ProfileManagement = () => {
+export default function ProfileManagement() {
     const [formData, setFormData] = useState({
       fullName: '',
       address1: '',
@@ -32,16 +33,49 @@ const states = [
         [name]: value,
       }));
     };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      // Here you can handle form submission, e.g., send data to server
-      console.log(formData);
-    };
+
+    const onClickSubmit = async event => {
+      event.preventDefault();
+        var truth1, truth2, truth3, truth4, truth5, truth6;
+        if (
+        formData.fullName === "NULL" || formData.fullName === "null" || formData.fullName === ""
+      ) {
+        truth1 = null;
+      } else {
+        truth1 = formData.fullName;
+      }
+      if (formData.address1 === "NULL" || formData.address1 === "null" || formData.address1 === "") {
+        truth2 = null;
+      } else {
+        truth2 = formData.address1;
+      }      
+      if (formData.address2 === "NULL" || formData.address2 === "null" || formData.address2 === "") {
+        truth3 = null;
+      } else {
+        truth3 = formData.address2;
+      }   
+      if (formData.city === "NULL" || formData.city === "null" || formData.city === "") {
+        truth4 = null;
+      } else {
+        truth4 = formData.city;
+      }   
+      if (formData.state === "NULL" || formData.state === "null" || formData.state === "") {
+        truth5 = null;
+      } else {
+        truth5 = formData.state;
+      }   
+      if (formData.zipcode === "NULL" || formData.zipcode === "null" || formData.zipcode === "") {
+        truth6 = null;
+      } else {
+        truth6 = formData.zipcode;
+      }      
+      const newInfo = { FullName: truth1, Address1: truth2, Address2: truth3, City: truth4, State: truth5, Zipcode: truth6 };
+      console.log(newInfo);
+    }
   
     return (
       <div id="profile-management">
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={onClickSubmit}>
         <Form.Group className="mb-3" controlId="fullName">
           <Form.Label>Full Name</Form.Label>
           <Form.Control
@@ -130,5 +164,3 @@ const states = [
       </div>
     );
   };
-
-  export default ProfileManagement;
