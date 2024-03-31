@@ -78,36 +78,48 @@ export default function ProfileManagement() {
     const onClickSubmit = async event => {
       event.preventDefault();
         var truth1, truth2, truth3, truth4, truth5, truth6;
-      if (formData.fullName === "NULL" || formData.fullName === "null" || formData.fullName === "" || formData.fullName.length > 50 || formData.state.length <= 0) {
+        if (formData.fullName !== "" || !(formData.fullName === "NULL" || formData.fullName === "null" || formData.fullName === "" || formData.fullName.length > 50 || formData.state.length <= 0)){
+        truth1 = formData.fullName;
+      } else if (fullName !== "") {
         truth1 = fullName;
       } else {
-        truth1 = formData.fullName;
+        truth1 = null;
       }
-      if (formData.address1 === "NULL" || formData.address1 === "null" || formData.address1 === "" || formData.address1.length > 100 || formData.state.length <= 0) {
+      if (formData.address1 !== "" || !(formData.address1 === "NULL" || formData.address1 === "null" || formData.address1 === "" || formData.address1.length > 50 || formData.state.length <= 0)){
+        truth2 = formData.address1;
+      } else if (address1 !== "") {
         truth2 = address1;
       } else {
-        truth2 = formData.address1;
-      }      
-      if (formData.address2 === "NULL" || formData.address2 === "null" || formData.address2 === "" || formData.address2.length > 100 || formData.state.length <= 0) {
+        truth2 = null;
+      }   
+      if (formData.address2 !== "" || !(formData.address2 === "NULL" || formData.address2 === "null" || formData.address2 === "" || formData.address2.length > 50 || formData.state.length <= 0)){
+        truth3 = formData.address2;
+      } else if (address2 !== "") {
         truth3 = address2;
       } else {
-        truth3 = formData.address2;
-      }   
-      if (formData.city === "NULL" || formData.city === "null" || formData.city === "" || formData.city.length > 100) {
+        truth3 = null;
+      }
+      if (formData.city !== "" || !(formData.city === "NULL" || formData.city === "null" || formData.city === "" || formData.city.length > 50 || formData.state.length <= 0)){
+        truth4 = formData.city;
+      } else if (city !== "") {
         truth4 = city;
       } else {
-        truth4 = formData.city;
-      }   
-      if (formData.state === "NULL" || formData.state === "null" || formData.state === "" || formData.state.length <= 0 || formData.state === "Other") {
-        truth5 = "NA";
-      } else {
+        truth4 = null;
+      } 
+      if (formData.state !== "" || !(formData.state === "NULL" || formData.state === "null" || formData.state === "" || formData.state.length > 50 || formData.state.length <= 0)){
         truth5 = formData.state;
-      }   
-      if (formData.zipcode === "NULL" || formData.zipcode === "null" || formData.zipcode === "" || formData.zipcode.length > 9 || formData.zipcode.length < 5 || !parseInt(formData.zipcode).isInteger) {
+      } else if (state !== "") {
+        truth5 = state;
+      } else {
+        truth5 = null;
+      }
+      if (formData.zipcode !== "" || !(formData.zipcode === "NULL" || formData.zipcode === "null" || formData.zipcode === "" || formData.zipcode.length > 50 || formData.state.length <= 0)){
+        truth6 = formData.zipcode;
+      } else if (zipcode !== "") {
         truth6 = zipcode;
       } else {
-        truth6 = formData.zipcode;
-      }      
+        truth6 = null;
+      }   
       try {
         const newInfo = { FullName: truth1, Address1: truth2, Address2: truth3, City: truth4, State: truth5, Zipcode: truth6 };
         console.log(ID);
