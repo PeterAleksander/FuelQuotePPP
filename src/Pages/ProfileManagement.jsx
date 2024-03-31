@@ -1,10 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { DataGrid, gridClasses } from "@mui/x-data-grid";
-import TableContainer from '@mui/material/TableContainer';
 import { Form } from 'react-bootstrap';
 import Alert from "@mui/material/Alert";
 import "../Styles/ProfileManagement.css"
@@ -82,34 +78,32 @@ export default function ProfileManagement() {
     const onClickSubmit = async event => {
       event.preventDefault();
         var truth1, truth2, truth3, truth4, truth5, truth6;
-        if (
-        formData.fullName === "NULL" || formData.fullName === "null" || formData.fullName === ""
-      ) {
+      if (formData.fullName === "NULL" || formData.fullName === "null" || formData.fullName === "" || formData.fullName.length > 50 || formData.state.length <= 0) {
         truth1 = null;
       } else {
         truth1 = formData.fullName;
       }
-      if (formData.address1 === "NULL" || formData.address1 === "null" || formData.address1 === "") {
+      if (formData.address1 === "NULL" || formData.address1 === "null" || formData.address1 === "" || formData.address1.length > 100 || formData.state.length <= 0) {
         truth2 = null;
       } else {
         truth2 = formData.address1;
       }      
-      if (formData.address2 === "NULL" || formData.address2 === "null" || formData.address2 === "") {
+      if (formData.address2 === "NULL" || formData.address2 === "null" || formData.address2 === "" || formData.address2.length > 100 || formData.state.length <= 0) {
         truth3 = null;
       } else {
         truth3 = formData.address2;
       }   
-      if (formData.city === "NULL" || formData.city === "null" || formData.city === "") {
+      if (formData.city === "NULL" || formData.city === "null" || formData.city === "" || formData.city.length > 100) {
         truth4 = null;
       } else {
         truth4 = formData.city;
       }   
-      if (formData.state === "NULL" || formData.state === "null" || formData.state === "" || formData.state === "Other") {
+      if (formData.state === "NULL" || formData.state === "null" || formData.state === "" || formData.state.length <= 0 || formData.state === "Other") {
         truth5 = "NA";
       } else {
         truth5 = formData.state;
       }   
-      if (formData.zipcode === "NULL" || formData.zipcode === "null" || formData.zipcode === "") {
+      if (formData.zipcode === "NULL" || formData.zipcode === "null" || formData.zipcode === "" || formData.zipcode.length > 9 || formData.zipcode.length < 5 || !parseInt(formData.zipcode).isInteger) {
         truth6 = null;
       } else {
         truth6 = formData.zipcode;
@@ -209,10 +203,11 @@ export default function ProfileManagement() {
             onChange={handleChange}
             required
             minLength={5}
+            maxLength={9}
           />
         </Form.Group>
   
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" onClick={handleSubmit}>
           Save
         </Button>
         {showAlert1 && (
