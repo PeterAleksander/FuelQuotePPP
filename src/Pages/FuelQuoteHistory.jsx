@@ -7,15 +7,14 @@ import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import TableContainer from '@mui/material/TableContainer';
 import { getQuotes } from "../api/FuelQuote.api";
 
-//The below is just dummy data, it will be pulled from our database when that is set up. This is just as a visual aid.
 const columns = [
-    { field: 'id', headerName: 'Quote ID', flex: 1, },
-    { field: 'gallons', headerName: 'Gallons Requested', flex: 1 },
-    { field: 'address', headerName: 'Delivery Address', flex: 1 },
-    { field: 'date', headerName: 'Date' , flex: 1 },
-    { field: 'price', headerName: 'Price / Gallon', flex: 1 },
-    { field: 'total', headerName: 'Total Due', flex: 1 },
-  ];
+  { field: 'QuoteID', headerName: 'Quote ID', flex: 1 },
+  { field: 'GallonsRequested', headerName: 'Gallons Requested', flex: 1 },
+  { field: 'DeliveryAddress', headerName: 'Delivery Address', flex: 1 },
+  { field: 'DeliveryDate', headerName: 'Delivery Date', flex: 1, type: 'date', valueFormatter: ({ value }) => value && new Date(value).toLocaleDateString() },
+  { field: 'SuggestedPricePerGallon', headerName: 'Price / Gallon', flex: 1 },
+  { field: 'TotalAmountDue', headerName: 'Total Due', flex: 1 }
+];
 
 export default function FuelQuoteHistory() {
   // State for storing rows
@@ -61,17 +60,15 @@ export default function FuelQuoteHistory() {
             <Box sx={{ width: "85%", margin: "auto"}}>
             <DataGrid
               rows={row}
-              getRowId={(row) => row.QuoteID}
+              getRowId={(row) => row.QuoteID}  // Changed from row.ClientID to row.QuoteID
               columns={columns}
               initialState={{
                 pagination: {
-                  paginationModel: {
-                    pageSize: 25,
-                  },
+                  pageSize: 25,
                 },
               }}
-              pageSizeOptions={[10]}
-              disableRowSelectionOnClick
+              pageSizeOptions={[10, 25, 50]}  // Updated to include 50 as an option
+              disableSelectionOnClick
               getRowHeight={() => 'auto'}
               sx={{
                 [`& .${gridClasses.cell}`]: {

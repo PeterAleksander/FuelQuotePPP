@@ -17,3 +17,26 @@ export const getQuotes = async (ID) => {
         throw error;
     }
 };
+
+export const sendQuote = async (itemBody) => {
+  try {
+      const requestOptions = {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(itemBody)
+      }
+      const response = await fetch(baseURL+"api/fuelquotes", requestOptions);
+      console.log(response);
+      if (response.status === 200) {
+        return true;
+      } else if (response.status === 409) {
+        console.log("Error creating user");
+        return false;
+      } else {
+        throw new Error(`Fetch error: ${response.status}`);
+      }
+  } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+  }
+};

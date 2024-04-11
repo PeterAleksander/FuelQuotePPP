@@ -2,3 +2,6 @@
     margin: 20px;
 }
   
+.readonly-date-input input[type="date"] {
+    pointer-events: none; /* Disable pointer events */
+  }
