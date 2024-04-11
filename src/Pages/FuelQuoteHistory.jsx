@@ -1,10 +1,11 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
 import TableContainer from '@mui/material/TableContainer';
+import { getQuotes } from "../api/FuelQuote.api";
 
 //The below is just dummy data, it will be pulled from our database when that is set up. This is just as a visual aid.
 const columns = [
@@ -15,14 +16,34 @@ const columns = [
     { field: 'price', headerName: 'Price / Gallon', flex: 1 },
     { field: 'total', headerName: 'Total Due', flex: 1 },
   ];
-  
-  const rows = [
-    { id: 1, gallons: 730, address: '19973 Cedar Mill Ln', date: "02/16/24", price: 3.117, total: 2275.410 },
-    { id: 2, gallons: 523, address: '20113 Amhurst Dr', date: "02/18/24", price: 3.498, total: 1829.454 },
-    { id: 3, gallons: 2863, address: '88263 Houston St', date: "02/19/24", price: 2.884, total: 8256.892 }
-  ];
 
 export default function FuelQuoteHistory() {
+  // State for storing rows
+  const [row, setRows] = useState([]);
+
+  useEffect(() => {
+    // Define a function to fetch quotes
+    const fetchQuotes = async () => {
+      const currentUserData = sessionStorage.getItem("currentUser");
+      let ID;
+      if (currentUserData) {
+        try {
+          const clientdata = Object.values(JSON.parse(currentUserData));
+          ID = clientdata[0];
+          const fetchedRows = await getQuotes(ID);
+          if (fetchedRows) {
+            // Assuming fetchedRows is an array of quotes
+            setRows(fetchedRows);
+          }
+        } catch (error) {
+          console.error("Error parsing currentUser data or fetching quotes:", error);
+        }
+      }
+    };
+
+    fetchQuotes();
+  }, []);
+
     return (
         <main>
             <Box sx={{ width: "100%", minHeight: "100px", paddingTop: 5, borderBottom: 3, marginBottom: 5}}>
@@ -39,17 +60,25 @@ export default function FuelQuoteHistory() {
             </Box>
             <Box sx={{ width: "85%", margin: "auto"}}>
             <DataGrid
-                rows={rows}
-                columns={columns}
-                initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 5 },
-                    },
-                }}
-                pageSizeOptions={[5, 10, 25]}   
-                checkboxSelection
-                sx={{ align: "center"}}
-            />
+              rows={row}
+              getRowId={(row) => row.QuoteID}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 25,
+                  },
+                },
+              }}
+              pageSizeOptions={[10]}
+              disableRowSelectionOnClick
+              getRowHeight={() => 'auto'}
+              sx={{
+                [`& .${gridClasses.cell}`]: {
+                  py: 1,
+                },
+              }}> 
+              </DataGrid>
             </Box>
         </main>
     )

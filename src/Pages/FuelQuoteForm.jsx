@@ -17,17 +17,23 @@ const FuelQuoteForm = () => {
   //dynamic values
   const [GallonsRequested, setGallonsRequested] = useState('');
   const [DeliveryDate, setDeliveryDate] = useState('');
+  const [showQuoteResult, setShowQuoteResult] = useState(false); // Visibility control for quote results
+  const [isQuoteButtonDisabled, setIsQuoteButtonDisabled] = useState(true);
 
   const handleSetGallonsRequested = (event) => {
     setGallonsRequested(event.target.value);
+    checkFormFields(GallonsRequested, DeliveryDate, state, DeliveryAddress);
   };
   const handleSetDeliveryDate = (event) => {
     setDeliveryDate(event.target.value);
+    checkFormFields(GallonsRequested, DeliveryDate, state, DeliveryAddress);
   };
 
   function onClickCalculate() {
-    var quotedRate = PricingModule(state, GallonsRequested)
-    var total = (quotedRate*GallonsRequested);
+    var result = PricingModule(state, GallonsRequested)
+    setPricePerGallon(result[0]);
+    setTotalPrice(result[1]); 
+    setShowQuoteResult(true); // Show quote results
   }
 
   var clientdata = [];
@@ -60,6 +66,17 @@ const FuelQuoteForm = () => {
     fetchData();
   }, []);
 
+  const checkFormFields = (gallons, date, stateValue, address) => {
+    const isValidGallons = gallons > 0 && gallons < 1000000;
+    const isFormFullyFilled = isValidGallons && date && stateValue && address;
+    setIsQuoteButtonDisabled(!isFormFullyFilled);
+  };
+
+  // Ensure to update isQuoteButtonDisabled when DeliveryAddress and state change
+  useEffect(() => {
+    checkFormFields(GallonsRequested, DeliveryDate, state, DeliveryAddress);
+  }, [DeliveryAddress, state]);
+
   return (
     <div id="fuel-quote-form">
     <Form>
@@ -78,19 +95,28 @@ const FuelQuoteForm = () => {
         <Form.Control type="date" onChange={handleSetDeliveryDate} required />
       </Form.Group>
 
-      {/*<Form.Group className="mb-3" controlId="suggestedPrice">
-        <Form.Label>Suggested Price / Gallon</Form.Label>
-        <Form.Control plaintext readOnly defaultValue="$2.75" />
-  </Form.Group>
+      <Button variant="primary" type="button" disabled={isQuoteButtonDisabled} onClick={onClickCalculate}>
+          Generate Quote
+        </Button>
 
-      <Form.Group className="mb-3" controlId="totalAmountDue">
-        <Form.Label>Total Amount Due</Form.Label>
-        <Form.Control plaintext readOnly defaultValue="$66.79" />
-      </Form.Group>*/}
+        {showQuoteResult && (
+          <>
+            <Form.Group className="mb-3" controlId="suggestedPrice" style={{marginTop: 40}}>
+              <Form.Label>Suggested Price / Gallon</Form.Label>
+              <Form.Control plaintext readOnly style={{textAlign: 'center'}} defaultValue={`$${PricePerGallon}`} />
+            </Form.Group>
 
-      <Button variant="primary" type="submit">
-        Generate Quote
-      </Button>
+            <Form.Group className="mb-3" controlId="totalAmountDue">
+              <Form.Label>Total Amount Due</Form.Label>
+              <Form.Control plaintext readOnly style={{textAlign: 'center'}} defaultValue={`$${TotalPrice}`} />
+            </Form.Group>
+
+            <Button variant="primary" type="submit">
+            Submit Quote
+            </Button>
+          </>
+        )}
+
     </Form>
     </div>
   );
