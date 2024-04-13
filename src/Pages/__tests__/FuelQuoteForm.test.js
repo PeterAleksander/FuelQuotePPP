@@ -23,7 +23,7 @@ jest.mock('../../api/FuelQuote.api', () => ({
 
 describe('FuelQuoteForm', () => {
   beforeEach(() => {
-    sessionStorage.setItem('currentUser', JSON.stringify({ id: '12345' }));
+    sessionStorage.setItem('currentUser', JSON.stringify({ id: '1' }));
   });
 
   afterEach(() => {
@@ -33,17 +33,22 @@ describe('FuelQuoteForm', () => {
   test('renders form with initial values', async () => {
     const { getByLabelText, getByText } = render(<FuelQuoteForm />);
     
-    expect(getByLabelText('Gallons Requested')).toBeInTheDocument();
-    expect(getByLabelText('Delivery Address')).toHaveValue('123 Main St');
-    expect(getByLabelText('Delivery Date')).toBeInTheDocument();
-    expect(getByText('Generate Quote')).toBeDisabled();
+    await waitFor(() => {
+      expect(getByLabelText('Gallons Requested')).toBeInTheDocument();
+      expect(getByLabelText('Delivery Address')).toHaveValue('123 Main St');
+      expect(getByLabelText('Delivery Date')).toBeInTheDocument();
+      expect(getByText('Generate Quote')).toBeDisabled();
+    });
   });
 
   test('calculates quote when "Generate Quote" button is clicked', async () => {
     const { getByLabelText, getByText } = render(<FuelQuoteForm />);
     
-    fireEvent.change(getByLabelText('Gallons Requested'), { target: { value: '100' } });
+    fireEvent.change(getByLabelText('Gallons Requested'), { target: { value: 100 } });
+    expect(getByLabelText('Gallons Requested')).toHaveValue(100);
     fireEvent.change(getByLabelText('Delivery Date'), { target: { value: '2024-04-12' } });
+    expect(getByLabelText('Delivery Date')).toHaveValue('2024-04-12');
+    expect(getByText('Generate Quote')).toBeEnabled();
     fireEvent.click(getByText('Generate Quote'));
 
     await waitFor(() => {
@@ -55,8 +60,9 @@ describe('FuelQuoteForm', () => {
   test('submits quote when "Submit Quote" button is clicked', async () => {
     const { getByLabelText, getByText } = render(<FuelQuoteForm />);
     
-    fireEvent.change(getByLabelText('Gallons Requested'), { target: { value: '100' } });
+    fireEvent.change(getByLabelText('Gallons Requested'), { target: { value: 100 } });
     fireEvent.change(getByLabelText('Delivery Date'), { target: { value: '2024-04-12' } });
+    expect(getByText('Generate Quote')).toBeEnabled();
     fireEvent.click(getByText('Generate Quote'));
 
     await waitFor(() => {
