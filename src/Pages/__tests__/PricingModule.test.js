@@ -7,7 +7,7 @@ describe('PricingModule', () => {
     const [ppg, total] = PricingModule(state, gallonsRequested);
 
     expect(ppg).toEqual(1.725);
-    expect(total).toEqual(1050);
+    expect(total).toEqual(862.5);
   });
 
   it('calculates pricing correctly for Texas state and gallons requested > 1000', () => {
@@ -16,7 +16,7 @@ describe('PricingModule', () => {
     const [ppg, total] = PricingModule(state, gallonsRequested);
 
     expect(ppg).toEqual(1.71);
-    expect(total).toEqual(3375);
+    expect(total).toEqual(2565);
   });
 
   it('calculates pricing correctly for non-Texas state and gallons requested <= 1000', () => {
@@ -25,7 +25,7 @@ describe('PricingModule', () => {
     const [ppg, total] = PricingModule(state, gallonsRequested);
 
     expect(ppg).toEqual(1.755);
-    expect(total).toEqual(1200);
+    expect(total).toEqual(877.5);
   });
 
   it('calculates pricing correctly for non-Texas state and gallons requested > 1000', () => {
@@ -34,6 +34,6 @@ describe('PricingModule', () => {
     const [ppg, total] = PricingModule(state, gallonsRequested);
 
     expect(ppg).toEqual(1.74);
-    expect(total).toEqual(3825);
+    expect(total).toEqual(2610);
   });
 });
