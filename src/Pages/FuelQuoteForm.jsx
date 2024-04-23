@@ -3,11 +3,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from 'react';
 import { useState, useEffect } from "react";
 import { Form, Button } from 'react-bootstrap';
+import Alert from "@mui/material/Alert";
 import { getInfo } from '../api/Profile.api';
 import PricingModule from '../PricingModule';
 import { sendQuote } from '../api/FuelQuote.api';
 
 const FuelQuoteForm = () => {
+  const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [state, setState] = useState('');
   const [PricePerGallon, setPricePerGallon] = useState('');
   const [TotalPrice, setTotalPrice] = useState('');
@@ -78,6 +81,8 @@ const FuelQuoteForm = () => {
       };
       console.log(newQuote);
       await sendQuote(newQuote);
+      setSuccessMessage("Quote sent to history!");
+      setShowAlertSuccess(true);
     } catch (error) {
     }
   }
@@ -127,7 +132,15 @@ const FuelQuoteForm = () => {
             </Button>
           </>
         )}
-
+        {showAlertSuccess && (
+          <Alert
+          severity="success"  // This sets the color to green or similar successful color
+          onClose={() => setShowAlertSuccess(false)}
+          sx={{ marginTop: 2, marginBottom: -2 }}
+          >
+          {successMessage}
+          </Alert>
+        )}
       </Form>
     </div>
   );

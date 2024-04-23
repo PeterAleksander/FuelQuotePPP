@@ -9,6 +9,8 @@ const LoginForm = () => {
     //alert messages
     const [showAlert1, setShowAlert1] = React.useState(false);
     const [errorMessage1, setErrorMessage1] = React.useState("");
+    const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
     //hooks for logging in
     const [Username, setUsername] = useState("");
     const [Password, setPassword] = useState("");
@@ -45,14 +47,19 @@ const LoginForm = () => {
           setErrorMessage1("");
           if (response != null) {
             sessionStorage.setItem("currentUser", JSON.stringify(response[0]));
+            setSuccessMessage("Login successful!");
+            setShowAlertSuccess(true);
+            setShowAlert1(false);
           }
           else {
             setErrorMessage1("No user with that login.");
             setShowAlert1(true);
+            setShowAlertSuccess(false);
           }
         } catch (error) {
             setErrorMessage1("No user with that login.");
             setShowAlert1(true);
+            setShowAlertSuccess(false);
         }
       };
 
@@ -76,8 +83,16 @@ const LoginForm = () => {
                     <div className='button'>
                         <button type="login" onClick={onClickLogin} href="/profilemanagement">Login</button>
                     </div>
-
-                    <div className="registerLink">
+                    {showAlertSuccess && (
+                      <Alert
+                        severity="success"  // This sets the color to green or similar successful color
+                        onClose={() => setShowAlertSuccess(false)}
+                        sx={{ marginTop: 2, marginBottom: -2 }}
+                        >
+                        {successMessage}
+                      </Alert>
+                    )}
+                    <div className="registerLink" style={{marginTop: 22}}>
                         <p>Don't have an account? <a href="/register">Register</a></p>
                     </div>
                     {showAlert1 && (

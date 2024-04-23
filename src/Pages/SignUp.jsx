@@ -9,6 +9,8 @@ export default function RegisterForm() {
     //alert messages
     const [showAlert1, setShowAlert1] = React.useState(false);
     const [errorMessage1, setErrorMessage1] = React.useState("");
+    const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
     //hooks for registering
     const [Username, setUsername] = useState("");
     const [Password, setPassword] = useState("");
@@ -41,11 +43,14 @@ const onClickRegister = async event => {
         };
         console.log(newUser);
         await userRegistration(newUser);
+        setSuccessMessage("Registration successful!");
+        setShowAlertSuccess(true);
         setShowAlert1(false);
         setErrorMessage1("");
       } catch (error) {
         setErrorMessage1("Input error, please fix!");
         setShowAlert1(true);
+        setShowAlertSuccess(false); 
       }                        
 }       
 
@@ -77,6 +82,15 @@ const onClickRegister = async event => {
                         sx={{ marginTop: 2, marginBottom: -2 }}
                         >
                         {errorMessage1}
+                        </Alert>
+                    )}
+                    {showAlertSuccess && (
+                        <Alert
+                        severity="success"  // This sets the color to green or similar successful color
+                        onClose={() => setShowAlertSuccess(false)}
+                        sx={{ marginTop: 2, marginBottom: -2 }}
+                        >
+                        {successMessage}
                         </Alert>
                     )}
                 </form>

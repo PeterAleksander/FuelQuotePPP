@@ -5,6 +5,7 @@ import { Form } from 'react-bootstrap';
 import Alert from "@mui/material/Alert";
 import "../Styles/ProfileManagement.css"
 import { updateInfo, getInfo } from "../api/Profile.api";
+import { isNumber } from "@mui/x-data-grid/internals";
 
 const states = [
     { code: 'TX', name: 'TX' },
@@ -16,6 +17,9 @@ export default function ProfileManagement() {
   //alert messages
   const [showAlert1, setShowAlert1] = React.useState(false);
   const [errorMessage1, setErrorMessage1] = React.useState("");
+  const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  //hooks for profile data
   const [fullName, setFullName] = useState('');
   const [address1, setAddress1] = useState('');
   const [address2, setAddress2] = useState('');
@@ -78,28 +82,28 @@ export default function ProfileManagement() {
     const onClickSubmit = async event => {
       event.preventDefault();
         var truth1, truth2, truth3, truth4, truth5, truth6;
-        if (formData.fullName !== "" || !(formData.fullName === "NULL" || formData.fullName === "null" || formData.fullName === "" || formData.fullName.length > 50 || formData.state.length <= 0)){
+        if (formData.fullName !== "" && !(formData.fullName === "NULL" || formData.fullName === "null" || formData.fullName === "" || formData.fullName.length > 50 || formData.fullName.length <= 0)){
         truth1 = formData.fullName;
       } else if (fullName !== "") {
         truth1 = fullName;
       } else {
         truth1 = null;
       }
-      if (formData.address1 !== "" || !(formData.address1 === "NULL" || formData.address1 === "null" || formData.address1 === "" || formData.address1.length > 50 || formData.state.length <= 0)){
+      if (formData.address1 !== "" && !(formData.address1 === "NULL" || formData.address1 === "null" || formData.address1 === "" || formData.address1.length > 50 || formData.address1.length <= 0)){
         truth2 = formData.address1;
       } else if (address1 !== "") {
         truth2 = address1;
       } else {
         truth2 = null;
       }   
-      if (formData.address2 !== "" || !(formData.address2 === "NULL" || formData.address2 === "null" || formData.address2 === "" || formData.address2.length > 50 || formData.state.length <= 0)){
+      if (formData.address2 !== "" && !(formData.address2 === "NULL" || formData.address2 === "null" || formData.address2 === "" || formData.address2.length > 50 || formData.address2.length <= 0)){
         truth3 = formData.address2;
       } else if (address2 !== "") {
         truth3 = address2;
       } else {
         truth3 = null;
       }
-      if (formData.city !== "" || !(formData.city === "NULL" || formData.city === "null" || formData.city === "" || formData.city.length > 50 || formData.state.length <= 0)){
+      if (formData.city !== "" && !(formData.city === "NULL" || formData.city === "null" || formData.city === "" || formData.city.length > 50 || formData.city.length <= 0)){
         truth4 = formData.city;
       } else if (city !== "") {
         truth4 = city;
@@ -108,14 +112,14 @@ export default function ProfileManagement() {
       } 
       if (formData.state === "Other"){
         truth5 = "NA";
-      } else if (formData.state !== "" || !(formData.state === "NULL" || formData.state === "null" || formData.state === "" || formData.state.length > 50 || formData.state.length <= 0)) {
+      } else if (formData.state !== "" && !(formData.state === "NULL" || formData.state === "null" || formData.state === "" || formData.state.length > 50 || formData.state.length <= 0)) {
         truth5 = formData.state;
       } else if (state !== "") {
         truth5 = state;
       } else {
         truth5 = null;
       }
-      if (formData.zipcode !== "" || !(formData.zipcode === "NULL" || formData.zipcode === "null" || formData.zipcode === "" || formData.zipcode.length > 50 || formData.state.length <= 0)){
+      if (formData.zipcode !== "" && !(formData.zipcode === "NULL" || formData.zipcode === "null" || formData.zipcode === "" || formData.zipcode.length > 9 || formData.zipcode.length <= 0)){
         truth6 = formData.zipcode;
       } else if (zipcode !== "") {
         truth6 = zipcode;
@@ -127,11 +131,14 @@ export default function ProfileManagement() {
         console.log(ID);
         console.log(newInfo);  
         await updateInfo(ID,newInfo);
+        setSuccessMessage("Information Saved!");
+        setShowAlertSuccess(true);
         setShowAlert1(false);
         setErrorMessage1("");
       } catch (error) {
-        setErrorMessage1("Input error, please fix!");
+        setErrorMessage1("Error saving information");
         setShowAlert1(true);
+        setShowAlertSuccess(false);
       }    
     }
   
@@ -231,6 +238,15 @@ export default function ProfileManagement() {
                         sx={{ marginTop: 2, marginBottom: -2 }}
                         >
                         {errorMessage1}
+                        </Alert>
+                    )}
+        {showAlertSuccess && (
+                        <Alert
+                        severity="success"  // This sets the color to green or similar successful color
+                        onClose={() => setShowAlertSuccess(false)}
+                        sx={{ marginTop: 2, marginBottom: -2 }}
+                        >
+                        {successMessage}
                         </Alert>
                     )}
       </Form>

@@ -12,11 +12,9 @@ export const userRegistration = async (itemBody) => {
         console.log(response);
         if (response.status === 200) {
           return true;
-        } else if (response.status === 409) {
-          console.log("Error creating user");
-          return false;
-        } else {
-          throw new Error(`Fetch error: ${response.status}`);
+        } else if (!response.ok) {
+          const errorResponse = await response.json();
+          throw new Error(errorResponse.error || 'Unknown error');
         }
     } catch (error) {
         console.error('Error creating user:', error);
