@@ -47,11 +47,11 @@ const LoginForm = () => {
             sessionStorage.setItem("currentUser", JSON.stringify(response[0]));
           }
           else {
-            setErrorMessage1("No user with that login.");
+            setErrorMessage1("Incorrect Username or Password.");
             setShowAlert1(true);
           }
         } catch (error) {
-            setErrorMessage1("No user with that login.");
+            setErrorMessage1("Incorrect Username or Password.");
             setShowAlert1(true);
         }
       };

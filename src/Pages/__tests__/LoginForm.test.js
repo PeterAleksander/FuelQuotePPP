@@ -49,7 +49,7 @@ describe('LoginForm', () => {
 
     await waitFor(() => {
       expect(userLogin).toHaveBeenCalledWith({ Username: 'invalidUser', Password: 'invalidPassword' });
-      expect(getByRole('alert')).toHaveTextContent('No user with that login.');
+      expect(getByRole('alert')).toHaveTextContent('Incorrect Username or Password.');
     });
   });
 });
