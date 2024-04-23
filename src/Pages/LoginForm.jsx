@@ -4,6 +4,7 @@ import { useState } from "react";
 import { userLogin } from '../api/Users.api';
 import Alert from "@mui/material/Alert";
 import {FaUser, FaLock} from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     //alert messages
@@ -20,6 +21,7 @@ const LoginForm = () => {
     const handleSetPassword = (event) => {
         setPassword(event.target.value);
     };
+    const navigate = useNavigate();
 
     const onClickLogin = async event => {
         event.preventDefault();
@@ -50,14 +52,15 @@ const LoginForm = () => {
             setSuccessMessage("Login successful!");
             setShowAlertSuccess(true);
             setShowAlert1(false);
+            navigate('/profilemanagement');
           }
           else {
-            setErrorMessage1("No user with that login.");
+            setErrorMessage1("Incorrect Username or Password.");
             setShowAlert1(true);
             setShowAlertSuccess(false);
           }
         } catch (error) {
-            setErrorMessage1("No user with that login.");
+            setErrorMessage1("Incorrect Username or Password.");
             setShowAlert1(true);
             setShowAlertSuccess(false);
         }
