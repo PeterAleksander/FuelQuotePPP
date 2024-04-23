@@ -4,6 +4,7 @@ import { useState } from "react";
 import { userLogin } from '../api/Users.api';
 import Alert from "@mui/material/Alert";
 import {FaUser, FaLock} from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     //alert messages
@@ -18,6 +19,7 @@ const LoginForm = () => {
     const handleSetPassword = (event) => {
         setPassword(event.target.value);
     };
+    const navigate = useNavigate();
 
     const onClickLogin = async event => {
         event.preventDefault();
@@ -45,6 +47,7 @@ const LoginForm = () => {
           setErrorMessage1("");
           if (response != null) {
             sessionStorage.setItem("currentUser", JSON.stringify(response[0]));
+            navigate('/profilemanagement');
           }
           else {
             setErrorMessage1("Incorrect Username or Password.");
