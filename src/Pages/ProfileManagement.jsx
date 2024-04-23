@@ -5,7 +5,6 @@ import { Form } from 'react-bootstrap';
 import Alert from "@mui/material/Alert";
 import "../Styles/ProfileManagement.css"
 import { updateInfo, getInfo } from "../api/Profile.api";
-import { isNumber } from "@mui/x-data-grid/internals";
 
 const states = [
     { code: 'TX', name: 'TX' },

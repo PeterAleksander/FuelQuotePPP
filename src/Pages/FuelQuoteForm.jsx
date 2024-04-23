@@ -51,12 +51,17 @@ const FuelQuoteForm = () => {
     checkFormFields(GallonsRequested, newDate, state, DeliveryAddress);
   };
 
-  function onClickCalculate() {
-    const result = PricingModule(state, GallonsRequested);
-    setPricePerGallon(result[0]);
-    setTotalPrice(result[1]);
-    console.log(DeliveryDate);
-    setShowQuoteResult(true);
+  async function onClickCalculate() {
+    const currentUserData = sessionStorage.getItem("currentUser");
+    if (currentUserData) {
+      const clientdata = Object.values(JSON.parse(currentUserData));
+      const ID = clientdata[0];
+      const result = await PricingModule(state, GallonsRequested, ID);
+      setPricePerGallon(result[0]);
+      setTotalPrice(result[1]);
+      console.log(DeliveryDate);
+      setShowQuoteResult(true);
+    }
   }
 
   const onClickSubmit = async () => {
