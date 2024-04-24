@@ -1,11 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
 import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
+  useLocation
 } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from 'react-bootstrap/Container';
@@ -21,45 +20,80 @@ import RegisterForm from './Pages/SignUp';
 function App() {
   return (
     <div className="App">
-      {/* This is where we add the routes to our pages.
-          First import the path of the file (as done above for FuelQuoteHistory.jsx
-          Then add a Route with the same format as below (within the <Routes> tags)
-          The default page should have a path of '/' which makes it render when the site first opens */}
       <Router>
-      <Navbar expand="lg" className="bg-body-tertiary">
-        <Container>
-          <Navbar.Brand href="/">Home</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="/profilemanagement">Profile Management</Nav.Link>
-              <Nav.Link href="/fuelquoteform">Fuel Quote</Nav.Link>
-              <Nav.Link href="/fuelquotehistory">Fuel Quote History</Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
         <Routes>
-          <Route path='/register' element={<RegisterForm/>}></Route>
-          <Route path='/' element={<LoginForm/>}></Route>
-          <Route path='/fuelquotehistory' element={<FuelQuoteHistory/>}></Route>
-          <Route path='/profilemanagement' element={<ProfileManagement/>}></Route>
-          <Route path='/fuelquoteform' element={<FuelQuoteForm/>}></Route>
+          {/* Route for the login page */}
+          <Route path='/' element={<LoginFormWithNavbar />} />
+          {/* Routes for other pages */}
+          <Route path='/register' element={<RegisterForm />} />
+          <Route path='/fuelquotehistory' element={<FuelQuoteHistoryWithNavbar />} />
+          <Route path='/profilemanagement' element={<ProfileManagementWithNavbar />} />
+          <Route path='/fuelquoteform' element={<FuelQuoteFormWithNavbar />} />
         </Routes>
       </Router>
     </div>
   );
 }
+
+function LoginFormWithNavbar() {
+  // We're on the login page, so we don't render the navbar
+  return (
+    <>
+      <LoginForm />
+    </>
+  );
+}
+
+function FuelQuoteHistoryWithNavbar() {
+  // We're on a page other than login, so render the navbar
+  return (
+    <>
+      <NavbarComponent />
+      <FuelQuoteHistory />
+    </>
+  );
+}
+
+function ProfileManagementWithNavbar() {
+  // We're on a page other than login, so render the navbar
+  return (
+    <>
+      <NavbarComponent />
+      <ProfileManagement />
+    </>
+  );
+}
+
+function FuelQuoteFormWithNavbar() {
+  // We're on a page other than login, so render the navbar
+  return (
+    <>
+      <NavbarComponent />
+      <FuelQuoteForm />
+    </>
+  );
+}
+
+function NavbarComponent() {
+  return (
+    <nav>
+      <div className="wrapper">
+        <div className="logo"></div>
+        <input type="radio" name="slider" id="menu-btn" />
+        <input type="radio" name="slider" id="close-btn" />
+        <ul className="nav-links">
+          <label htmlFor="close-btn" className="btn close-btn"><i className="fas fa-times"></i></label>
+          {/* Navbar options */}
+          <li><a href="/profilemanagement">Profile Management</a></li>
+          <li><a href="/fuelquoteform">Fuel Quote Form</a></li>
+          <li><a href="/fuelquotehistory">Fuel Quote History</a></li>
+        </ul>
+        <label htmlFor="menu-btn" className="btn menu-btn"><i className="fas fa-bars"></i></label>
+      </div>
+    </nav>
+  );
+}
+
+
 
 export default App;
