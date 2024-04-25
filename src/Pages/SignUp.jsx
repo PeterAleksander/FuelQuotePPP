@@ -5,6 +5,7 @@ import user_icon from '../Styles/Assets/person.png'
 import password_icon from '../Styles/Assets/password.png'
 import Alert from "@mui/material/Alert";
 import { userRegistration } from "../api/Users.api";
+import bcrypt from 'bcryptjs'
 
 export default function RegisterForm() {
     //alert messages
@@ -24,6 +25,7 @@ export default function RegisterForm() {
 
 const onClickRegister = async event => {
     event.preventDefault();
+    const saltRounds = 10;
     var truth1, truth2;
     if (
         Username === "NULL" || Username === "null" || Username === ""
@@ -38,11 +40,11 @@ const onClickRegister = async event => {
         truth2 = Password;
       }         
       try {
+        const hashedPassword = await bcrypt.hash(truth2, saltRounds);
         const newUser = {
           Username: truth1,
-          Password: truth2,
+          Password: hashedPassword,
         };
-        console.log(newUser);
         await userRegistration(newUser);
         setSuccessMessage("Registration successful!");
         setShowAlertSuccess(true);
