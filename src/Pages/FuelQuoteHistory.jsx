@@ -44,6 +44,7 @@ export default function FuelQuoteHistory() {
   }, []);
 
     return (
+      <div id="fuel-quote-history">
         <main>
             <Box sx={{ width: "100%", minHeight: "100px", paddingTop: 5, borderBottom: 3, marginBottom: 5}}>
             <Typography
@@ -78,5 +79,6 @@ export default function FuelQuoteHistory() {
               </DataGrid>
             </Box>
         </main>
+      </div>
     )
 }
