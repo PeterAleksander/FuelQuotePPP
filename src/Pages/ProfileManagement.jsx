@@ -7,10 +7,51 @@ import "../Styles/ProfileManagement.css"
 import { updateInfo, getInfo } from "../api/Profile.api";
 
 const states = [
-    { code: 'TX', name: 'TX' },
-    { code: 'Other', name: 'Other' },
-    // Add other states as needed...
-  ];
+  { code: 'AL', name: 'AL' },
+  { code: 'AK', name: 'AK' },
+  { code: 'AZ', name: 'AZ' },
+  { code: 'AR', name: 'AR' },
+  { code: 'CA', name: 'CA' },
+  { code: 'CO', name: 'CO' },
+  { code: 'CT', name: 'CT' },
+  { code: 'DE', name: 'DE' },
+  { code: 'FL', name: 'FL' },
+  { code: 'GA', name: 'GA' },
+  { code: 'HI', name: 'HI' },
+  { code: 'ID', name: 'ID' },
+  { code: 'IL', name: 'IL' },
+  { code: 'IN', name: 'IN' },
+  { code: 'IA', name: 'IA' },
+  { code: 'KS', name: 'KS' },
+  { code: 'KY', name: 'KY' },
+  { code: 'LA', name: 'LA' },
+  { code: 'ME', name: 'ME' },
+  { code: 'MD', name: 'MD' },
+  { code: 'MA', name: 'MA' },
+  { code: 'MI', name: 'MI' },
+  { code: 'MN', name: 'MN' },
+  { code: 'MS', name: 'MS' },
+  { code: 'MO', name: 'MO' },
+  { code: 'MT', name: 'MT' },
+  { code: 'NE', name: 'NE' },
+  { code: 'NV', name: 'NV' },
+  { code: 'NH', name: 'NH' },
+  { code: 'NJ', name: 'NJ' },
+  { code: 'NM', name: 'NM' },
+  { code: 'NY', name: 'NY' },
+  { code: 'NC', name: 'NC' },
+  { code: 'ND', name: 'ND' },
+  { code: 'OH', name: 'OH' },
+  { code: 'OK', name: 'OK' },
+  { code: 'OR', name: 'OR' },
+  { code: 'PA', name: 'PA' },
+  { code: 'RI', name: 'RI' },
+  { code: 'SC', name: 'SC' },
+  { code: 'SD', name: 'SD' },
+  { code: 'TN', name: 'TN' },
+  { code: 'TX', name: 'TX' },
+  { code: 'Other', name: 'Other' }
+];
   
 export default function ProfileManagement() {
   //alert messages

@@ -99,7 +99,7 @@ const onClickRegister = async event => {
                         {successMessage}
                         </Alert>
                     )}
-                    <div className="loginLink" style={{marginTop: 22}}>
+                    <div className="loginLink" style={{marginTop: 22, textAlign: 'center'}}>
                         <p>Already have an account? <a href="/">Login</a></p>
                     </div>
                 </form>

@@ -99,7 +99,7 @@ const LoginForm = () => {
                         {successMessage}
                       </Alert>
                     )}
-                    <div className="registerLink" style={{marginTop: 22}}>
+                    <div className="registerLink" style={{marginTop: 22, textAlign: 'center'}}>
                         <p>Don't have an account? <a href="/register">Register</a></p>
                     </div>
                     {showAlert1 && (
