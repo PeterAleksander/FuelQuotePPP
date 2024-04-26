@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom'; // For additional matchers like .toBeInTheDocument
+import { MemoryRouter } from 'react-router-dom'; // Import MemoryRouter
+import '@testing-library/jest-dom';
 import LoginForm from '../LoginForm';
 import { userLogin } from '../../api/Users.api';
 
@@ -17,11 +18,15 @@ describe('LoginForm', () => {
     // Mocking successful login response
     userLogin.mockResolvedValue([{ username: 'testUser' }]);
 
-    const { getByPlaceholderText, getByRole } = render(<LoginForm />);
+    const { getByPlaceholderText, getByRole } = render(
+      <MemoryRouter>
+        <LoginForm />
+      </MemoryRouter> // Wrap LoginForm with MemoryRouter
+    );
 
     const usernameInput = getByPlaceholderText('Username');
     const passwordInput = getByPlaceholderText('Password');
-    const loginButton = getByRole('button', { name: 'Login' }); // Using getByRole with button role
+    const loginButton = getByRole('button', { name: 'Login' });
 
     fireEvent.change(usernameInput, { target: { value: 'testUser' } });
     fireEvent.change(passwordInput, { target: { value: 'password' } });
@@ -37,11 +42,15 @@ describe('LoginForm', () => {
     // Mocking unsuccessful login response
     userLogin.mockResolvedValue(null);
 
-    const { getByPlaceholderText, getByRole } = render(<LoginForm />);
+    const { getByPlaceholderText, getByRole } = render(
+      <MemoryRouter>
+        <LoginForm />
+      </MemoryRouter>
+    );
 
     const usernameInput = getByPlaceholderText('Username');
     const passwordInput = getByPlaceholderText('Password');
-    const loginButton = getByRole('button', { name: 'Login' }); // Using getByRole with button role
+    const loginButton = getByRole('button', { name: 'Login' });
 
     fireEvent.change(usernameInput, { target: { value: 'invalidUser' } });
     fireEvent.change(passwordInput, { target: { value: 'invalidPassword' } });

@@ -1,181 +1,166 @@
+import bcrypt from 'bcryptjs'; // Assuming this import is accessible in the test file
 import { userRegistration, userLogin, profileManagement } from '../../api/Users.api';
 
-describe('User API', () => {
-  let originalFetch;
+// Mocking bcrypt.hash function
+jest.mock('bcryptjs', () => ({
+  hash: jest.fn((data, saltRounds) => 'hashedPassword') // Mocking bcrypt.hash to return a fixed hashed password
+}));
 
-  beforeAll(() => {
-    originalFetch = global.fetch;
-  });
-
-  afterAll(() => {
-    global.fetch = originalFetch;
-  });
-
-  beforeEach(() => {
-    global.fetch = jest.fn(); // Mocking fetch function
-  });
-
+describe('userRegistration', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks(); // Clear mocks after each test
   });
 
-  describe('userRegistration', () => {
-    it('makes a POST request with correct data', async () => {
-      const itemBody = { username: 'testUser', password: 'password' };
+  it('throws an error for non-200 response', async () => {
+    const mockItemBody = { Username: 'testUser', Password: 'password' };
 
-      global.fetch.mockResolvedValueOnce({
-        status: 200,
-      });
+    // Mocking fetch function to simulate non-200 response
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 400,
+        json: () => Promise.resolve({ error: 'Bad request' }), // Simulate response JSON
+      })
+    );
 
-      await userRegistration(itemBody);
-
-      expect(fetch).toHaveBeenCalledWith('https://fuel.college:3001/api/usercredentials', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(itemBody),
-      });
-    });
-
-    it('returns true on success', async () => {
-      const itemBody = { username: 'testUser', password: 'password' };
-
-      global.fetch.mockResolvedValueOnce({
-        status: 200,
-      });
-
-      const result = await userRegistration(itemBody);
-
-      expect(result).toEqual(true);
-    });
-
-    it('returns false on conflict', async () => {
-      const itemBody = { username: 'testUser', password: 'password' };
-
-      global.fetch.mockResolvedValueOnce({
-        status: 409, // Mock conflict response
-      });
-
-      const result = await userRegistration(itemBody);
-
-      expect(result).toEqual(false);
-    });
-
-    it('throws error on failure', async () => {
-      const itemBody = { username: 'testUser', password: 'password' };
-
-      global.fetch.mockResolvedValueOnce({
-        status: 500, // Mock failed response
-      });
-
-      await expect(userRegistration(itemBody)).rejects.toThrowError();
-    });
+    await expect(userRegistration(mockItemBody)).rejects.toThrow('Bad request'); // Expect the function to throw an error
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
   });
 
-  describe('userLogin', () => {
-    it('makes a POST request with correct data', async () => {
-      const itemBody = { username: 'testUser', password: 'password' };
+  it('registers a user successfully', async () => {
+    const mockItemBody = { Username: 'testUser', Password: 'password' };
 
-      global.fetch.mockResolvedValueOnce({
+    // Mocking fetch function
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
         status: 200,
-        json: async () => ({ results: 'success' }), // Mock successful response
-      });
+        json: () => Promise.resolve({ results: {} })
+      })
+    );
 
-      await userLogin(itemBody);
+    const result = await userRegistration(mockItemBody);
 
-      expect(fetch).toHaveBeenCalledWith('https://fuel.college:3001/api/usercredentials/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(itemBody),
-      });
-    });
-
-    it('returns data on success', async () => {
-      const itemBody = { username: 'testUser', password: 'password' };
-
-      global.fetch.mockResolvedValueOnce({
-        status: 200,
-        json: async () => ({ results: 'success' }), // Mock successful response
-      });
-
-      const data = await userLogin(itemBody);
-
-      expect(data).toEqual('success');
-    });
-
-    it('returns null on unauthorized login', async () => {
-      const itemBody = { username: 'testUser', password: 'password' };
-
-      global.fetch.mockResolvedValueOnce({
-        status: 401, // Mock unauthorized response
-      });
-
-      const result = await userLogin(itemBody);
-
-      expect(result).toEqual(null);
-    });
-
-    it('throws error on failure', async () => {
-      const itemBody = { username: 'testUser', password: 'password' };
-
-      global.fetch.mockResolvedValueOnce({
-        status: 500, // Mock failed response
-      });
-
-      await expect(userLogin(itemBody)).rejects.toThrowError();
-    });
+    expect(result).toBe(true); // Expect the function to return true for successful registration
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
   });
 
-  describe('profileManagement', () => {
-    it('makes a POST request with correct data', async () => {
-      const itemBody = { /* Some data for profile management */ };
+  it('throws an error for failed registration', async () => {
+    const mockItemBody = { Username: 'testUser', Password: 'password' };
 
-      global.fetch.mockResolvedValueOnce({
+    // Mocking fetch function to simulate failure
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 400,
+        json: () => Promise.resolve({ error: 'Registration failed' })
+      })
+    );
+
+    await expect(userRegistration(mockItemBody)).rejects.toThrow('Registration failed'); // Expect the function to throw an error
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
+  });
+});
+
+describe('userLogin', () => {
+  afterEach(() => {
+    jest.clearAllMocks(); // Clear mocks after each test
+  });
+
+  it('logs in a user successfully', async () => {
+    const mockItemBody = { Username: 'testUser', Password: 'password' };
+
+    // Mocking fetch function
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
         status: 200,
-        json: async () => ({ results: 'success' }), // Mock successful response
-      });
+        json: () => Promise.resolve({ results: {} })
+      })
+    );
 
-      await profileManagement(itemBody);
+    const result = await userLogin(mockItemBody);
 
-      expect(fetch).toHaveBeenCalledWith('https://fuel.college:3001/api/usercredentials/information', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(itemBody),
-      });
-    });
+    expect(result).toEqual({}); // Expect the function to return the user data
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
+  });
 
-    it('returns data on success', async () => {
-      const itemBody = { /* Some data for profile management */ };
+  it('throws an error for fetch failure', async () => {
+    const mockItemBody = { Username: 'testUser', Password: 'password' };
 
-      global.fetch.mockResolvedValueOnce({
+    // Mocking fetch function to simulate fetch failure
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 500,
+      })
+    );
+
+    await expect(userLogin(mockItemBody)).rejects.toThrow('Fetch error: 500'); // Expect the function to throw an error
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
+  });
+
+  it('returns null for invalid login credentials', async () => {
+    const mockItemBody = { Username: 'testUser', Password: 'password' };
+
+    // Mocking fetch function to simulate invalid credentials
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 401,
+      })
+    );
+
+    const result = await userLogin(mockItemBody);
+
+    expect(result).toBeNull(); // Expect the function to return null for invalid credentials
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
+  });
+});
+
+describe('profileManagement', () => {
+  afterEach(() => {
+    jest.clearAllMocks(); // Clear mocks after each test
+  });
+
+  it('throws an error for fetch failure', async () => {
+    const mockItemBody = { info: 'user info' };
+
+    // Mocking fetch function to simulate fetch failure
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 500,
+      })
+    );
+
+    await expect(profileManagement(mockItemBody)).rejects.toThrow('Fetch error: 500'); // Expect the function to throw an error
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
+  });
+
+  it('saves user information successfully', async () => {
+    const mockItemBody = { info: 'user info' };
+
+    // Mocking fetch function
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
         status: 200,
-        json: async () => ({ results: 'success' }), // Mock successful response
-      });
+        json: () => Promise.resolve({ results: {} })
+      })
+    );
 
-      const data = await profileManagement(itemBody);
+    const result = await profileManagement(mockItemBody);
 
-      expect(data).toEqual('success');
-    });
+    expect(result).toEqual({}); // Expect the function to return the saved user information
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
+  });
 
-    it('returns null on unauthorized access', async () => {
-      const itemBody = { /* Some data for profile management */ };
+  it('returns null for invalid login credentials', async () => {
+    const mockItemBody = { info: 'user info' };
 
-      global.fetch.mockResolvedValueOnce({
-        status: 401, // Mock unauthorized response
-      });
+    // Mocking fetch function to simulate invalid credentials
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 401,
+      })
+    );
 
-      const result = await profileManagement(itemBody);
+    const result = await profileManagement(mockItemBody);
 
-      expect(result).toEqual(null);
-    });
-
-    it('throws error on failure', async () => {
-      const itemBody = { /* Some data for profile management */ };
-
-      global.fetch.mockResolvedValueOnce({
-        status: 500, // Mock failed response
-      });
-
-      await expect(profileManagement(itemBody)).rejects.toThrowError();
-    });
+    expect(result).toBeNull(); // Expect the function to return null for invalid credentials
+    expect(fetch).toHaveBeenCalledTimes(1); // Expect fetch function to be called once
   });
 });

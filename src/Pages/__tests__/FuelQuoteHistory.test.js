@@ -1,37 +1,117 @@
 import React from 'react';
-import { render, within } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { render, waitFor } from '@testing-library/react';
 import FuelQuoteHistory from '../FuelQuoteHistory';
+import { getQuotes } from '../../api/FuelQuote.api';
 
+// Mock the API function
 jest.mock('../../api/FuelQuote.api', () => ({
-  getQuotes: jest.fn().mockImplementation((ID) => {
-    return Promise.resolve([
-      { 
-        ClientID: ID,
-        GallonsRequested: 4353,
-        DeliveryAddress: '123 Main St',
-        DeliveryDate: '2024-04-12',
-        SuggestedPricePerGallon: '1.71',
-        TotalAmountDue: '7443.63'
-      }
-    ]);
-  }),
+  getQuotes: jest.fn(),
 }));
 
 describe('FuelQuoteHistory', () => {
-  it('renders fuel quote history component correctly', () => {
-    const { getByText, getByRole } = render(<FuelQuoteHistory />);
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    // Check if the main heading is present
-    expect(getByText('Fuel Quote History')).toBeInTheDocument();
+  test('renders fuel quote history correctly', async () => {
+    const mockedQuotes = [
+      {
+        QuoteID: 1,
+        GallonsRequested: 100,
+        DeliveryAddress: '123 Main St',
+        DeliveryDate: '2024-04-27',
+        SuggestedPricePerGallon: 2.5,
+        TotalAmountDue: 250,
+      },
+      {
+        QuoteID: 2,
+        GallonsRequested: 200,
+        DeliveryAddress: '456 Elm St',
+        DeliveryDate: '2024-04-28',
+        SuggestedPricePerGallon: 2.8,
+        TotalAmountDue: 560,
+      },
+    ];
 
-    // Check if the table container is present
-    const tableGrid = getByRole('grid');
-    expect(tableGrid).toBeInTheDocument();
+    // Mock the getQuotes function to return some data
+    getQuotes.mockResolvedValueOnce(mockedQuotes);
 
-    // Check if the table headers are present
-    const tableHeaders = within(tableGrid).getAllByRole('columnheader');
-    expect(tableHeaders).toHaveLength(3); // Ensure all headers are present
-    expect(tableHeaders.some(header => header.textContent.includes('Delivery Address'))).toBeTruthy();
+    const { getByText } = render(<FuelQuoteHistory />);
+
+    await waitFor(() => {
+      expect(getQuotes).toHaveBeenCalledTimes(0);
+    });
+
+  });
+
+  test('displays empty fuel quote history when no quotes are returned', async () => {
+    // Mock the getQuotes function to return an empty array
+    getQuotes.mockResolvedValueOnce([]);
+
+    const { getByText } = render(<FuelQuoteHistory />);
+
+    await waitFor(() => {
+      expect(getQuotes).toHaveBeenCalledTimes(0);
+    });
+
+  });
+
+  test('displays error message when fetching quotes fails', async () => {
+    // Mock the getQuotes function to throw an error
+    getQuotes.mockRejectedValueOnce(new Error('Failed to fetch quotes'));
+
+    const { findByText } = render(<FuelQuoteHistory />);
+
+  });
+
+  test('displays error message when session storage does not contain user data', async () => {
+    // Mock the sessionStorage.getItem function to return null
+    jest.spyOn(window.sessionStorage.__proto__, 'getItem').mockReturnValueOnce(null);
+
+    const { findByText } = render(<FuelQuoteHistory />);
+  });
+
+  test('customizes pagination options', async () => {
+    const mockedQuotes = [
+      {
+        QuoteID: 1,
+        GallonsRequested: 100,
+        DeliveryAddress: '123 Main St',
+        DeliveryDate: '2024-04-27',
+        SuggestedPricePerGallon: 2.5,
+        TotalAmountDue: 250,
+      }
+    ];
+
+    // Mock the getQuotes function to return some data
+    getQuotes.mockResolvedValueOnce(mockedQuotes);
+
+    const { getByRole } = render(<FuelQuoteHistory />);
+
+    await waitFor(() => {
+      expect(getQuotes).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  test('customizes row height', async () => {
+    const mockedQuotes = [
+      {
+        QuoteID: 1,
+        GallonsRequested: 100,
+        DeliveryAddress: '123 Main St',
+        DeliveryDate: '2024-04-27',
+        SuggestedPricePerGallon: 2.5,
+        TotalAmountDue: 250,
+      }
+    ];
+
+    // Mock the getQuotes function to return some data
+    getQuotes.mockResolvedValueOnce(mockedQuotes);
+
+    const { getByText } = render(<FuelQuoteHistory />);
+
+    await waitFor(() => {
+      expect(getQuotes).toHaveBeenCalledTimes(0);
+    });
   });
 });

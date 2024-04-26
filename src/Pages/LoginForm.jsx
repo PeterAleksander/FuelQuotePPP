@@ -86,7 +86,7 @@ const LoginForm = () => {
                       </div>
                     </div>
                     <div className='button-container'>
-                      <div className='button' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '220px', height: '59px', color: '#fff', background: '#4c00b4', borderRadius: '50px', fontSize: '19px', fontWeight: '700', cursor: 'pointer' }}>
+                      <div  data-testid="login-form" className='button' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '220px', height: '59px', color: '#fff', background: '#4c00b4', borderRadius: '50px', fontSize: '19px', fontWeight: '700', cursor: 'pointer' }}>
                           <button type="login" onClick={onClickLogin} href="/profilemanagement" style={{all: 'unset'}}>Login</button>
                       </div>
                     </div>

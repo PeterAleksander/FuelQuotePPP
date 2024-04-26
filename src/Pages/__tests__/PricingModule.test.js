@@ -1,39 +1,57 @@
 import PricingModule from '../../PricingModule';
 
 describe('PricingModule', () => {
-  it('calculates pricing correctly for Texas state and gallons requested <= 1000', () => {
-    const state = 'TX';
-    const gallonsRequested = 500;
-    const [ppg, total] = PricingModule(state, gallonsRequested);
-
-    expect(ppg).toEqual(1.725);
-    expect(total).toEqual(862.5);
+  afterEach(() => {
+    jest.clearAllMocks(); // Clear mocks after each test
   });
 
-  it('calculates pricing correctly for Texas state and gallons requested > 1000', () => {
+  it('calculates pricing correctly for TX state and gallons requested > 1000', async () => {
     const state = 'TX';
     const gallonsRequested = 1500;
-    const [ppg, total] = PricingModule(state, gallonsRequested);
+    const ID = 123;
 
-    expect(ppg).toEqual(1.71);
-    expect(total).toEqual(2565);
+    const mockResponseData = { hasHistory: true };
+    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
+      json: () => Promise.resolve(mockResponseData),
+    });
+
+    const [ppg, total] = await PricingModule(state, gallonsRequested, ID);
+
+    // Assertions
+    expect(ppg).toBeCloseTo(1.695, 2);
+    expect(total).toBeCloseTo(2542.5, 2);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(`https://fuel.college:3001/api/hasFuelQuotes/${ID}`);
   });
 
-  it('calculates pricing correctly for non-Texas state and gallons requested <= 1000', () => {
-    const state = 'Other';
-    const gallonsRequested = 500;
-    const [ppg, total] = PricingModule(state, gallonsRequested);
+  it('calculates pricing correctly for non-TX state and gallons requested <= 1000', async () => {
+    const state = 'CA';
+    const gallonsRequested = 800;
+    const ID = 456;
 
-    expect(ppg).toEqual(1.755);
-    expect(total).toEqual(877.5);
+    const mockResponseData = { hasHistory: false };
+    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
+      json: () => Promise.resolve(mockResponseData),
+    });
+
+    const [ppg, total] = await PricingModule(state, gallonsRequested, ID);
+
+    // Assertions
+    expect(ppg).toBeCloseTo(1.755, 2);
+    expect(total).toBeCloseTo(1404, 2);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(`https://fuel.college:3001/api/hasFuelQuotes/${ID}`);
   });
 
-  it('calculates pricing correctly for non-Texas state and gallons requested > 1000', () => {
-    const state = 'Other';
-    const gallonsRequested = 1500;
-    const [ppg, total] = PricingModule(state, gallonsRequested);
+  it('throws an error if fetch fails', async () => {
+    const state = 'TX';
+    const gallonsRequested = 1200;
+    const ID = 789;
 
-    expect(ppg).toEqual(1.74);
-    expect(total).toEqual(2610);
+    jest.spyOn(global, 'fetch').mockRejectedValueOnce(new Error('Failed to fetch'));
+
+    await expect(PricingModule(state, gallonsRequested, ID)).rejects.toThrow('Failed to fetch');
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(`https://fuel.college:3001/api/hasFuelQuotes/${ID}`);
   });
 });

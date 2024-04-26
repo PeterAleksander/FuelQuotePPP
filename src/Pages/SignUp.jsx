@@ -83,6 +83,9 @@ const onClickRegister = async event => {
                     </div>
                     </div>
                     </div>
+                    <div className="loginLink" style={{marginTop: 22, textAlign: 'center'}}>
+                        <p>Already have an account? <a href="/">Login</a></p>
+                    </div>
                     {showAlert1 && (
                         <Alert
                         severity="error"
@@ -92,18 +95,6 @@ const onClickRegister = async event => {
                         {errorMessage1}
                         </Alert>
                     )}
-                    {showAlertSuccess && (
-                        <Alert
-                        severity="success"  // This sets the color to green or similar successful color
-                        onClose={() => setShowAlertSuccess(false)}
-                        sx={{ marginTop: 2, marginBottom: -2 }}
-                        >
-                        {successMessage}
-                        </Alert>
-                    )}
-                    <div className="loginLink" style={{marginTop: 22, textAlign: 'center'}}>
-                        <p>Already have an account? <a href="/">Login</a></p>
-                    </div>
                 </form>
             </div>
         </div>

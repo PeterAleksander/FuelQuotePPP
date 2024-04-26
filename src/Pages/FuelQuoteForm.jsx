@@ -124,12 +124,12 @@ const FuelQuoteForm = () => {
           <>
             <Form.Group className="mb-3" controlId="suggestedPrice" style={{ marginTop: 40 }}>
               <Form.Label>Suggested Price / Gallon</Form.Label>
-              <Form.Control plaintext readOnly style={{ textAlign: 'center' }} defaultValue={`$${PricePerGallon}`} />
+              <Form.Control plaintext readOnly defaultValue={`$${PricePerGallon}`} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="totalAmountDue">
               <Form.Label>Total Amount Due</Form.Label>
-              <Form.Control plaintext readOnly style={{ textAlign: 'center' }} defaultValue={`$${TotalPrice}`} />
+              <Form.Control plaintext readOnly defaultValue={`$${TotalPrice}`} />
             </Form.Group>
 
             <Button variant="primary" type="button" onClick={onClickSubmit}>

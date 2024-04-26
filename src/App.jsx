@@ -16,6 +16,14 @@ import LoginForm from './Pages/LoginForm';
 import ProfileManagement from './Pages/ProfileManagement';
 import FuelQuoteForm from './Pages/FuelQuoteForm';
 import RegisterForm from './Pages/SignUp';
+export {
+  App,
+  LoginFormWithNavbar,
+  FuelQuoteHistoryWithNavbar,
+  ProfileManagementWithNavbar,
+  FuelQuoteFormWithNavbar
+};
+
 
 function App() {
   return (
@@ -85,8 +93,8 @@ function NavbarComponent() {
           <label htmlFor="close-btn" className="btn close-btn"><i className="fas fa-times"></i></label>
           {/* Navbar options */}
           <li><a href="/profilemanagement">Profile Management</a></li>
-          <li><a href="/fuelquoteform">Fuel Quote Form</a></li>
-          <li><a href="/fuelquotehistory">Fuel Quote History</a></li>
+          <li data-testid="fuel-quote-form"><a href="/fuelquoteform">Fuel Quote Form</a></li>
+          <li data-testid="fuel-quote-history"><a href="/fuelquotehistory">Fuel Quote History</a></li>
         </ul>
         <label htmlFor="menu-btn" className="btn menu-btn"><i className="fas fa-bars"></i></label>
       </div>

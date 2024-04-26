@@ -48,26 +48,25 @@ describe('ProfileManagement component', () => {
       });
     });
   });
-
-  it('handles form submission with invalid data', async () => {
-    // Mock user ID
-    const fakeUserId = 'fakeUserId';
-    sessionStorage.setItem('currentUser', JSON.stringify([fakeUserId]));
+  it('displays success message after successful save', async () => {
+    const mockUserData = {
+      FullName: 'John Doe',
+      Address1: '123 Main St',
+      Address2: '',
+      City: 'Anytown',
+      State: 'CA',
+      Zipcode: '12345',
+    };
+    getInfo.mockResolvedValueOnce([mockUserData]);
+    updateInfo.mockResolvedValueOnce();
   
-    // Render component
-    const { getByText, queryByText } = render(<ProfileManagement />);
+    const { getByText } = render(<ProfileManagement />);
   
-    // Click save button without filling out the form
     fireEvent.click(getByText('Save'));
   
-    // Wait for error message to appear
     await waitFor(() => {
-      // Assert that the error message is displayed
-      expect(queryByText(/input error, please fix/i)).toBeInTheDocument();
+      expect(updateInfo).toHaveBeenCalledTimes(1);
+      expect(getByText('Information Saved!')).toBeInTheDocument();
     });
-  
-    // Assert that updateInfo is not called
-    expect(updateInfo).not.toHaveBeenCalled();
   });
-  
 });

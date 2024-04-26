@@ -55,7 +55,6 @@ nav .wrapper{
   line-height: 70px;
   margin: auto;
   display: flex;
-  align-items: center;
   justify-content: space-between;
 }
 .wrapper .logo a{
